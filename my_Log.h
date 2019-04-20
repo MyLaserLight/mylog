@@ -4,23 +4,24 @@
  /// @date    2018-06-11 20:59:20
  ///
 
-#ifndef __WD_MYLOG_H__
-#define __WD_MYLOG_H__
+#ifndef __YBTC_MYLOG_H__
+#define __YBTC_MYLOG_H__
 
 #include <log4cpp/Category.hh>
+
 
 //Singleton
 //1. 构造函数私有，析构函数私有
 //2. 静态函数getInstance()
 //3. 静态私有成员  类名 * _pInstance;
-namespace wd
+namespace YBTC
 {
 
 class Mylog
 {
 public:
 	static Mylog *getInstance();
-	static void destroy(); void warn(const char *msg);
+	static void destroy(); 
 
 	template <class... T>
 	void warn(const char *msg, T... args)
@@ -48,19 +49,18 @@ private:
 	~Mylog();
 private:
 	log4cpp::Category &_root;
-	static Mylog *_pInstance;
 };
 
 }//end of namespace wd
 
-#define prefix(msg) string("[").append(__FILE__)\
+#define prefix(msg) std::string("[").append(__FILE__)\
 		.append(":").append(__FUNCTION__)\
 		.append(":").append(std::to_string(__LINE__))\
 		.append("]: ").append(msg).c_str()
 
-#define LogWarn(msg, args...) wd::Mylog::getInstance()->warn(prefix(msg), ##args)
-#define LogInfo(msg, args...) wd::Mylog::getInstance()->info(prefix(msg), ##args)
-#define LogError(msg, args...) wd::Mylog::getInstance()->error(prefix(msg), ##args)
-#define LogDebug(msg, args...) wd::Mylog::getInstance()->debug(prefix(msg), ##args)
+#define LogWarn(msg, ...) YBTC::Mylog::getInstance()->warn(prefix(msg), __VA_ARGS__)
+#define LogInfo(msg, ...) YBTC::Mylog::getInstance()->info(prefix(msg), __VA_ARGS__)
+#define LogError(msg, ...) YBTC::Mylog::getInstance()->error(prefix(msg), __VA_ARGS__)
+#define LogDebug(msg, ...) YBTC::Mylog::getInstance()->debug(prefix(msg), __VA_ARGS__)
 
 #endif

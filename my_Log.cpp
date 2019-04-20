@@ -4,29 +4,28 @@
  /// @date    2018-06-11 21:15:27
  ///
 
-#include "myLog.h"
+#include "pch.h"
+#include "my_Log.h"
 
-#include <log4cpp/OstreamAppender.hh>
-#include <log4cpp/RollingFileAppender.hh>
-#include <log4cpp/Priority.hh>
-#include <log4cpp/PatternLayout.hh>
+#include "log4cpp/OstreamAppender.hh"
+#include "log4cpp/RollingFileAppender.hh"
+#include "log4cpp/Priority.hh"
+#include "log4cpp/PatternLayout.hh"
 
 #include <iostream>
 using std::cout;
-using namespace wd;
+using namespace YBTC;
 using namespace log4cpp;
 
-Mylog * Mylog::_pInstance = NULL;
+//Mylog * Mylog::_pInstance = NULL;
 
 Mylog * Mylog::getInstance()
-{
-	if (_pInstance == NULL)
-	{
-		_pInstance = new Mylog();
-	}
-	return _pInstance;
+{  // 单例模式 静态局部对象
+	static Mylog Instance;
+	return &Instance;
 }
 
+#if 0
 void Mylog::destroy()
 {
 	if (_pInstance)
@@ -34,7 +33,7 @@ void Mylog::destroy()
 		delete _pInstance;
 	}
 }
-#if 0
+
 template <class... T>
 void Mylog::warn(const char *msg, T... args)
 {
@@ -71,7 +70,7 @@ Mylog::Mylog()
 	ostreamappender->setLayout(ptnLyout1);
 
 	RollingFileAppender *rollingfileAppender = 
-		new RollingFileAppender("rollingfileAppender", "../log/run.log", 5*1024*1024);
+		new RollingFileAppender("rollingfileAppender", "run.log", 5*1024*1024);
 	rollingfileAppender->setLayout(ptnLyout2);
 
 	_root.addAppender(ostreamappender);
